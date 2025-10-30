@@ -1,0 +1,88 @@
+<?php
+require_once 'connect.php';
+
+// รับค่า branch_id จาก GET parameter
+$branch_filter = isset($_GET['branch_id']) ? $_GET['branch_id'] : '';
+
+// สร้าง SQL query
+if ($branch_filter != '' && $branch_filter != 'all') {
+    $sql = "SELECT * FROM service_progress_view WHERE branch_ID = $branch_filter ORDER BY service_startdate DESC";
+} else {
+    $sql = "SELECT * FROM service_progress_view ORDER BY service_startdate DESC";
+}
+
+$result = mysqli_query($link, $sql);
+
+// ดึงข้อมูลสาขาทั้งหมดสำหรับ dropdown
+$branch_sql = "SELECT * FROM branch ORDER BY branch_name";
+$branch_result = mysqli_query($link, $branch_sql);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>สถานะการบริการ</title>
+</head>
+<body>
+    <h1>สถานะการบริการ</h1>
+    <a href="index.php">← กลับหน้าหลัก</a>
+    
+    <!-- Filter Form -->
+    <form method="GET" style="margin: 20px 0;">
+        <label>กรองตามสาขา: </label>
+        <select name="branch_id" onchange="this.form.submit()">
+            <option value="all" <?php echo ($branch_filter == 'all' || $branch_filter == '') ? 'selected' : ''; ?>>
+                ทุกสาขา
+            </option>
+            <?php while($branch = mysqli_fetch_assoc($branch_result)): ?>
+                <option value="<?php echo $branch['branch_ID']; ?>" 
+                        <?php echo ($branch_filter == $branch['branch_ID']) ? 'selected' : ''; ?>>
+                    <?php echo $branch['branch_name']; ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
+    </form>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>รหัสบริการ</th>
+                <th>ชื่อลูกค้า</th>
+                <th>ทะเบียนรถ</th>
+                <th>สีรถ</th>
+                <th>ประเภทรถ</th>
+                <th>สถานะ</th>
+                <th>เริ่มบริการ</th>
+                <th>เสร็จสิ้น</th>
+                <th>สาขา</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $count = mysqli_num_rows($result);
+            if($count == 0): 
+            ?>
+            <tr>
+                <td colspan="9" style="text-align:center;">ไม่พบข้อมูล</td>
+            </tr>
+            <?php else: ?>
+                <?php while($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                    <td><?php echo $row['service_ID']; ?></td>
+                    <td><?php echo $row['customer_name']; ?></td>
+                    <td><?php echo $row['vehicle_plate']; ?></td>
+                    <td><?php echo $row['vehicle_color']; ?></td>
+                    <td><?php echo $row['vtype_name']; ?></td>
+                    <td><?php echo $row['service_status']; ?></td>
+                    <td><?php echo $row['service_startdate']; ?></td>
+                    <td><?php echo $row['service_finishdate'] ?? 'กำลังดำเนินการ'; ?></td>
+                    <td><strong><?php echo $row['branch_name']; ?></strong></td>
+                </tr>
+                <?php endwhile; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+    
+    <p>พบ <strong><?php echo $count; ?></strong> รายการ</p>
+</body>
+</html>
