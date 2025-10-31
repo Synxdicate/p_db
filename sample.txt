@@ -1,4 +1,9 @@
 SET FOREIGN_KEY_CHECKS = 0;
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+SOURCE schema.sql;  -- ถ้ามีไฟล์ schema
+SOURCE seed_data.sql;  -- ไฟล์นี้ของคุณ
+SET FOREIGN_KEY_CHECKS = 1;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 

@@ -1,26 +1,20 @@
-<!-- connect.php -->
 <?php
 $user = 'root';
-$password = 'root';
+$password = '1998';
 $db = 'washflow'; 
-$host = 'localhost';
-$port = 3306;
+
+$host = '127.0.0.1';
+$port = 3307;
 
 $link = mysqli_init();
-if ($link === false) {
+if (!$link) {
     die('mysqli_init failed');
 }
 
-$success = mysqli_real_connect(
-   $link,
-   $host,
-   $user,
-   $password,
-   $db,
-   $port
-);
-if (!$success) {
-    die('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
+if (!mysqli_real_connect($link, $host, $user, $password, $db, $port)) {
+    die('Connect Error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error());
 }
-// echo "Connected to database: " . $db;
+
+//echo "✅ Connected to database '$db' at $host:$port";
 ?>
+

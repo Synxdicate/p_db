@@ -1,10 +1,8 @@
 <?php
 require_once 'connect.php';
 
-// รับค่า branch_id จาก GET parameter
 $branch_filter = isset($_GET['branch_id']) ? $_GET['branch_id'] : '';
 
-// สร้าง SQL query
 if ($branch_filter != '' && $branch_filter != 'all') {
     $sql = "SELECT * FROM employee_branch_role_view WHERE branch_ID = $branch_filter ORDER BY role_name";
 } else {
@@ -13,7 +11,6 @@ if ($branch_filter != '' && $branch_filter != 'all') {
 
 $result = mysqli_query($link, $sql);
 
-// ดึงข้อมูลสาขาทั้งหมดสำหรับ dropdown
 $branch_sql = "SELECT * FROM branch ORDER BY branch_name";
 $branch_result = mysqli_query($link, $branch_sql);
 ?>
@@ -25,11 +22,9 @@ $branch_result = mysqli_query($link, $branch_sql);
 </head>
 <body>
     <h1>ข้อมูลพนักงาน</h1>
-    <a href="index.php">← กลับหน้าหลัก</a>
-    
-    <!-- Filter Form -->
+    <a href="index.php">หน้าหลัก</a>
     <form method="GET" style="margin: 20px 0;">
-        <label>กรองตามสาขา: </label>
+        <label>สาขา: </label>
         <select name="branch_id" onchange="this.form.submit()">
             <option value="all" <?php echo ($branch_filter == 'all' || $branch_filter == '') ? 'selected' : ''; ?>>
                 ทุกสาขา
@@ -76,7 +71,6 @@ $branch_result = mysqli_query($link, $branch_sql);
             <?php endif; ?>
         </tbody>
     </table>
-    
     <p>พบ <strong><?php echo $count; ?></strong> รายการ</p>
 </body>
 </html>

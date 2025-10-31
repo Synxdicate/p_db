@@ -1,19 +1,16 @@
 <?php
 require_once 'connect.php';
 
-// รับค่า branch_id จาก GET parameter
 $branch_filter = isset($_GET['branch_id']) ? $_GET['branch_id'] : '';
 
-// สร้าง SQL query
 if ($branch_filter != '' && $branch_filter != 'all') {
-    $sql = "SELECT * FROM payment_receipt_view WHERE branch_ID = $branch_filter ORDER BY payment_date DESC";
+    $sql = "SELECT * FROM payment_receipt_view WHERE branch_ID = $branch_filter ORDER BY payment_date";
 } else {
-    $sql = "SELECT * FROM payment_receipt_view ORDER BY payment_date DESC";
+    $sql = "SELECT * FROM payment_receipt_view ORDER BY payment_date";
 }
 
 $result = mysqli_query($link, $sql);
 
-// ดึงข้อมูลสาขาทั้งหมดสำหรับ dropdown
 $branch_sql = "SELECT * FROM branch ORDER BY branch_name";
 $branch_result = mysqli_query($link, $branch_sql);
 ?>
@@ -25,9 +22,7 @@ $branch_result = mysqli_query($link, $branch_sql);
 </head>
 <body>
     <h1>การชำระเงินและใบเสร็จ</h1>
-    <a href="index.php">← กลับหน้าหลัก</a>
-    
-    <!-- Filter Form -->
+    <a href="index.php">หน้าหลัก</a>
     <form method="GET" style="margin: 20px 0;">
         <label>กรองตามสาขา: </label>
         <select name="branch_id" onchange="this.form.submit()">

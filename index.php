@@ -21,6 +21,7 @@ require_once 'connect.php';
         <li><a href="view8_branch_stats.php">8. สถิติการจองแต่ละสาขา</a></li>
         <li><a href="view9_service_pricing.php">9. ตารางราคาบริการ</a></li>
         <li><a href="view10_active_services.php">10. บริการที่กำลังดำเนินการ</a></li>
+        <li><a href="insert.php">insert ข้อมูล</a></li>
     </ul>
 </body>
 </html>
