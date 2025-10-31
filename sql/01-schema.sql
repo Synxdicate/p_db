@@ -12,6 +12,8 @@ DROP TABLE IF EXISTS branch;
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS Service_type;
 
+USE washflow; 
+
 CREATE TABLE branch (
     branch_ID INT PRIMARY KEY AUTO_INCREMENT,
     branch_name VARCHAR(100) NOT NULL,

@@ -7,38 +7,49 @@ services:
     container_name: washflow_mysql
     restart: always
     environment:
+      # These credentials MUST match those in connect.php
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: washflow
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
     ports:
       - "3307:3306"
     volumes:
+      # Persistent data volume for the database files
       - mysql_data:/var/lib/mysql
+      # Mount the local 'sql' directory for initialization scripts
       - ./sql:/docker-entrypoint-initdb.d
     networks:
       - washflow_network
+    # Required for compatibility with older PHP/MySQL drivers
     command: --default-authentication-plugin=mysql_native_password
+    
+    # === FIX: Healthcheck Definition to ensure readiness ===
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
 
-  # phpMyAdmin
+  # phpMyAdmin Interface
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: washflow_phpmyadmin
     restart: always
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: mysql  # Connect to the service name 'mysql'
       PMA_PORT: 3306
       PMA_USER: root
       PMA_PASSWORD: root
-      UPLOAD_LIMIT: 50M
     ports:
       - "8080:80"
     depends_on:
-      - mysql
+      # Waits until MySQL is 'healthy' before starting
+      mysql:
+        condition: service_healthy
     networks:
       - washflow_network
 
-  # Apache + PHP
+  # Apache + PHP Web Server
   web:
     image: php:8.1-apache
     container_name: washflow_web
@@ -46,11 +57,15 @@ services:
     ports:
       - "80:80"
     volumes:
+      # Mount the current directory into the web root
       - ./:/var/www/html
+    # Waits until MySQL is 'healthy' before starting
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - washflow_network
+    # Commands to install mysqli driver and start Apache
     command: >
       bash -c "
       docker-php-ext-install mysqli &&
@@ -58,7 +73,7 @@ services:
       "
 
 volumes:
-  mysql_data:
+  mysql_data:  # Defines the named volume for MySQL persistence
 
 networks:
   washflow_network:

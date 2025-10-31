@@ -10,6 +10,8 @@ DROP VIEW IF EXISTS customer_membership_view;
 DROP VIEW IF EXISTS branch_booking_count_view;
 DROP VIEW IF EXISTS service_type_pricing_view;
 
+USE washflow; 
+
 -- 1. Customer Membership View (ไม่เกี่ยวสาขา)
 CREATE VIEW customer_membership_view AS
 SELECT 
