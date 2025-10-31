@@ -70,16 +70,16 @@ $branch_result = mysqli_query($link, $branch_sql);
                     <td><?php echo $row['cust_tel']; ?></td>
                     <td><?php echo $row['vehicle_plate']; ?></td>
                     <td><?php echo $row['vehicle_color']; ?></td>
-                    <td><?php echo $row['vtype_name']; ?></td>
-                    <td><strong><?php echo $row['service_status']; ?></strong></td>
+                    <td><?php echo $row['vehicletype_name']; ?></td>
+                    <td><?php echo $row['service_status']; ?></td>
                     <td><?php echo $row['service_startdate']; ?></td>
-                    <td><strong><?php echo $row['branch_name']; ?></strong></td>
+                    <td><?php echo $row['branch_name']; ?></td>
                 </tr>
                 <?php endwhile; ?>
             <?php endif; ?>
         </tbody>
     </table>
     
-    <p>พบ <strong><?php echo $count; ?></strong> รายการที่กำลังดำเนินการ</p>
+    <p>พบ <?php echo $count; ?>รายการที่กำลังดำเนินการ</p>
 </body>
 </html>

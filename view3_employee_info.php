@@ -4,9 +4,9 @@ require_once 'connect.php';
 $branch_filter = isset($_GET['branch_id']) ? $_GET['branch_id'] : '';
 
 if ($branch_filter != '' && $branch_filter != 'all') {
-    $sql = "SELECT * FROM employee_branch_role_view WHERE branch_ID = $branch_filter ORDER BY role_name";
+    $sql = "SELECT * FROM employee_branch_role_view WHERE branch_ID = $branch_filter ORDER BY pos_name";
 } else {
-    $sql = "SELECT * FROM employee_branch_role_view ORDER BY branch_name, role_name";
+    $sql = "SELECT * FROM employee_branch_role_view ORDER BY branch_name, pos_name";
 }
 
 $result = mysqli_query($link, $sql);
@@ -62,15 +62,15 @@ $branch_result = mysqli_query($link, $branch_sql);
                 <tr>
                     <td><?php echo $row['emp_ID']; ?></td>
                     <td><?php echo $row['employee_name']; ?></td>
-                    <td><?php echo $row['role_name'] ?? '-'; ?></td>
-                    <td style="text-align: right;"><?php echo number_format($row['salary'] ?? 0, 2); ?></td>
-                    <td><strong><?php echo $row['branch_name']; ?></strong></td>
+                    <td><?php echo $row['pos_name'] ?? '-'; ?></td>
+                    <td style="text-align: right;"><?php echo number_format($row['pos_salary'] ?? 0, 2); ?></td>
+                    <td><?php echo $row['branch_name']; ?></td>
                     <td><?php echo $row['branch_address']; ?></td>
                 </tr>
                 <?php endwhile; ?>
             <?php endif; ?>
         </tbody>
     </table>
-    <p>พบ <strong><?php echo $count; ?></strong> รายการ</p>
+    <p>พบ<?php echo $count; ?> รายการ</p>
 </body>
 </html>

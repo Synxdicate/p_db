@@ -1,10 +1,8 @@
 <?php
 require_once 'connect.php';
 
-// รับค่า branch_id จาก GET parameter
 $branch_filter = isset($_GET['branch_id']) ? $_GET['branch_id'] : '';
 
-// สร้าง SQL query
 if ($branch_filter != '' && $branch_filter != 'all') {
     $sql = "SELECT * FROM service_progress_view WHERE branch_ID = $branch_filter ORDER BY service_startdate DESC";
 } else {
@@ -13,7 +11,6 @@ if ($branch_filter != '' && $branch_filter != 'all') {
 
 $result = mysqli_query($link, $sql);
 
-// ดึงข้อมูลสาขาทั้งหมดสำหรับ dropdown
 $branch_sql = "SELECT * FROM branch ORDER BY branch_name";
 $branch_result = mysqli_query($link, $branch_sql);
 ?>
@@ -27,7 +24,6 @@ $branch_result = mysqli_query($link, $branch_sql);
     <h1>สถานะการบริการ</h1>
     <a href="index.php">← กลับหน้าหลัก</a>
     
-    <!-- Filter Form -->
     <form method="GET" style="margin: 20px 0;">
         <label>กรองตามสาขา: </label>
         <select name="branch_id" onchange="this.form.submit()">
@@ -72,17 +68,17 @@ $branch_result = mysqli_query($link, $branch_sql);
                     <td><?php echo $row['customer_name']; ?></td>
                     <td><?php echo $row['vehicle_plate']; ?></td>
                     <td><?php echo $row['vehicle_color']; ?></td>
-                    <td><?php echo $row['vtype_name']; ?></td>
+                    <td><?php echo $row['vehicletype_name']; ?></td>
                     <td><?php echo $row['service_status']; ?></td>
                     <td><?php echo $row['service_startdate']; ?></td>
                     <td><?php echo $row['service_finishdate'] ?? 'กำลังดำเนินการ'; ?></td>
-                    <td><strong><?php echo $row['branch_name']; ?></strong></td>
+                    <td><?php echo $row['branch_name']; ?></td>
                 </tr>
                 <?php endwhile; ?>
             <?php endif; ?>
         </tbody>
     </table>
     
-    <p>พบ <strong><?php echo $count; ?></strong> รายการ</p>
+    <p>พบ <?php echo $count; ?> รายการ</p>
 </body>
 </html>

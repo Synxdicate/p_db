@@ -1,7 +1,7 @@
 <?php
 require_once 'connect.php';
 
-$sql = "SELECT * FROM service_type_pricing_view ORDER BY Type_serviceID, vtype_ID";
+$sql = "SELECT * FROM service_type_pricing_view ORDER BY serviceType_ID, vehicletype_ID";
 $result = mysqli_query($link, $sql);
 ?>
 
@@ -27,11 +27,11 @@ $result = mysqli_query($link, $sql);
         <tbody>
             <?php while($row = mysqli_fetch_assoc($result)): ?>
             <tr>
-                <td><?php echo $row['Type_serviceName']; ?></td>
-                <td><?php echo number_format($row['Type_serviceBasePrice'], 2); ?></td>
-                <td><?php echo $row['vtype_name']; ?></td>
-                <td><?php echo $row['vtype_multiplier']; ?></td>
-                <td><strong><?php echo number_format($row['calculated_price'], 2); ?></strong></td>
+                <td><?php echo $row['serviceType_Name']; ?></td>
+                <td><?php echo number_format($row['serviceType_BasePrice'], 2); ?></td>
+                <td><?php echo $row['vehicletype_name']; ?></td>
+                <td><?php echo $row['vehicletype_multiplier']; ?></td>
+                <td><?php echo number_format($row['calculated_price'], 2); ?></td>
             </tr>
             <?php endwhile; ?>
         </tbody>

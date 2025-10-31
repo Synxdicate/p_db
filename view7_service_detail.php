@@ -71,11 +71,11 @@ $branch_result = mysqli_query($link, $branch_sql);
                     <td><?php echo $row['service_ID']; ?></td>
                     <td><?php echo $row['customer_name']; ?></td>
                     <td><?php echo $row['vehicle_plate']; ?></td>
-                    <td><?php echo $row['Type_serviceName']; ?></td>
+                    <td><?php echo $row['serviceType_Name']; ?></td>
                     <td style="text-align: center;"><?php echo $row['sdetail_quantity']; ?></td>
                     <td style="text-align: right;"><?php echo number_format($row['sdetail_price'], 2); ?></td>
                     <td><?php echo $row['employee_name']; ?></td>
-                    <td><strong><?php echo $row['branch_name']; ?></strong></td>
+                    <td><?php echo $row['branch_name']; ?></td>
                 </tr>
                 <?php endwhile; ?>
                 <tr style="background-color: #f0f0f0; font-weight: bold;">
@@ -87,6 +87,6 @@ $branch_result = mysqli_query($link, $branch_sql);
         </tbody>
     </table>
     
-    <p>พบ <strong><?php echo $count; ?></strong> รายการ | ยอดรวม <strong><?php echo number_format($total, 2); ?></strong> บาท</p>
+    <p>พบ<?php echo $count; ?> รายการ | ยอดรวม <?php echo number_format($total, 2); ?> บาท</p>
 </body>
 </html>

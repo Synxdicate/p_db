@@ -4,9 +4,9 @@ require_once 'connect.php';
 $branch_filter = isset($_GET['branch_id']) ? $_GET['branch_id'] : '';
 
 if ($branch_filter != '' && $branch_filter != 'all') {
-    $sql = "SELECT * FROM payment_receipt_view WHERE branch_ID = $branch_filter ORDER BY payment_date";
+    $sql = "SELECT * FROM payment_receipt_view WHERE branch_ID = $branch_filter ORDER BY payment_date DESC";
 } else {
-    $sql = "SELECT * FROM payment_receipt_view ORDER BY payment_date";
+    $sql = "SELECT * FROM payment_receipt_view ORDER BY payment_date DESC";
 }
 
 $result = mysqli_query($link, $sql);
@@ -72,7 +72,7 @@ $branch_result = mysqli_query($link, $branch_sql);
                     <td><?php echo $row['payment_method']; ?></td>
                     <td><?php echo $row['receipt_number'] ?? '-'; ?></td>
                     <td><?php echo $row['receipt_description'] ?? '-'; ?></td>
-                    <td><strong><?php echo $row['branch_name']; ?></strong></td>
+                    <td><?php echo $row['branch_name']; ?></td>
                 </tr>
                 <?php endwhile; ?>
                 <tr style="background-color: #f0f0f0; font-weight: bold;">
@@ -84,6 +84,6 @@ $branch_result = mysqli_query($link, $branch_sql);
         </tbody>
     </table>
     
-    <p>พบ <strong><?php echo $count; ?></strong> รายการ | ยอดรวม <strong><?php echo number_format($total, 2); ?></strong> บาท</p>
+    <p>พบ <?php echo $count; ?> รายการ | ยอดรวม <?php echo number_format($total, 2); ?> บาท</p>
 </body>
 </html>

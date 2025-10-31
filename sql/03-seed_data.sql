@@ -1,13 +1,11 @@
 SET FOREIGN_KEY_CHECKS = 0;
 SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-SET FOREIGN_KEY_CHECKS = 1;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 USE washflow; 
 
--- ลบข้อมูลเก่า
+
 DELETE FROM receipt;
 DELETE FROM service_detail;
 DELETE FROM payment;
@@ -17,12 +15,12 @@ DELETE FROM membership;
 DELETE FROM vehicle;
 DELETE FROM employee;
 DELETE FROM customer;
-DELETE FROM role;
+DELETE FROM employee_position;
 DELETE FROM branch;
 DELETE FROM vehicle_type;
 DELETE FROM service_type;
 
--- Reset AUTO_INCREMENT
+
 ALTER TABLE receipt AUTO_INCREMENT = 1;
 ALTER TABLE service_detail AUTO_INCREMENT = 1;
 ALTER TABLE payment AUTO_INCREMENT = 1;
@@ -32,16 +30,12 @@ ALTER TABLE membership AUTO_INCREMENT = 1;
 ALTER TABLE vehicle AUTO_INCREMENT = 1;
 ALTER TABLE employee AUTO_INCREMENT = 1;
 ALTER TABLE customer AUTO_INCREMENT = 1;
-ALTER TABLE role AUTO_INCREMENT = 1;
+ALTER TABLE employee_position AUTO_INCREMENT = 1;
 ALTER TABLE branch AUTO_INCREMENT = 1;
 ALTER TABLE vehicle_type AUTO_INCREMENT = 1;
 ALTER TABLE service_type AUTO_INCREMENT = 1;
 
 SET FOREIGN_KEY_CHECKS = 1;
-
--- ========================================
--- เพิ่มข้อมูลใหม่
--- ========================================
 
 -- 1. สาขา
 INSERT INTO branch (branch_name, branch_address) VALUES
@@ -49,30 +43,30 @@ INSERT INTO branch (branch_name, branch_address) VALUES
 ('WashFlow สาขาเชียงใหม่', '456 ถ.ห้วยแก้ว ต.สุเทพ อ.เมือง เชียงใหม่ 50200'),
 ('WashFlow สาขาภูเก็ต', '789 ถ.เฉลิมพระเกียรติ ต.ราไวย์ อ.เมือง ภูเก็ต 83130');
 
--- 2. ประเภทรถ
-INSERT INTO vehicle_type (vtype_name, vtype_multiplier) VALUES
+-- 2. ประเภทรถ 
+INSERT INTO vehicle_type (vehicletype_name, vehicletype_multiplier) VALUES
 ('มอเตอร์ไซค์', 0.50),
 ('รถเก๋ง', 1.00),
 ('รถกระบะ', 1.50),
 ('รถ SUV', 1.75),
 ('รถตู้', 2.00);
 
--- 3. ประเภทบริการ
-INSERT INTO service_type (Type_serviceName, Type_serviceBasePrice) VALUES
+-- 3. ประเภทบริการ 
+INSERT INTO service_type (serviceType_Name, serviceType_BasePrice) VALUES
 ('ล้างรถ', 200.00),
 ('ดูดฝุ่น', 80.00),
 ('เคลือบสีรถ', 150.00),
 ('ขัดสี', 1000.00),
 ('ซักเบาะ', 2000.00);
 
--- 4. ตำแหน่งงาน
-INSERT INTO role (role_name, salary) VALUES
+-- 4. ตำแหน่งงาน 
+INSERT INTO employee_position (pos_name, pos_salary) VALUES
 ('Manager', 35000.00),
 ('Cashier', 16000.00),
 ('Cleaner', 9000.00);
 
--- 5. พนักงาน
-INSERT INTO employee (emp_fname, emp_lname, emp_address, emp_username, emp_password, branch_ID, role_ID) VALUES
+-- 5. พนักงาน 
+INSERT INTO employee (emp_fname, emp_lname, emp_address, emp_username, emp_password, branch_ID, pos_ID) VALUES
 ('สมชาย', 'ใจดี', 'กรุงเทพฯ', 'somchai.m', 'pass123', 1, 1),
 ('สมหญิง', 'รักงาน', 'กรุงเทพฯ', 'somying.c', 'pass123', 1, 2),
 ('สมศักดิ์', 'ขยัน', 'กรุงเทพฯ', 'somsak.cl1', 'pass123', 1, 3),
@@ -84,7 +78,7 @@ INSERT INTO employee (emp_fname, emp_lname, emp_address, emp_username, emp_passw
 ('นิภา', 'เงินสด', 'ภูเก็ต', 'nipa.c', 'pass123', 3, 2),
 ('ชาตรี', 'ล้างดี', 'ภูเก็ต', 'chatri.cl', 'pass123', 3, 3);
 
--- 6. ลูกค้า (20 คน)
+-- 6. ลูกค้า
 INSERT INTO customer (cust_fname, cust_lname, cust_tel, cust_address, cust_username, cust_password) VALUES
 ('ธนา', 'รวยมาก', '0812345001', 'กรุงเทพฯ', 'thana01', 'pass123'),
 ('สุดา', 'งามสม', '0812345002', 'กรุงเทพฯ', 'suda02', 'pass123'),
@@ -107,8 +101,8 @@ INSERT INTO customer (cust_fname, cust_lname, cust_tel, cust_address, cust_usern
 ('อรุณ', 'สว่าง', '0812345019', 'กรุงเทพฯ', 'arun19', 'pass123'),
 ('พรทิพย์', 'งามล้ำ', '0812345020', 'กรุงเทพฯ', 'porntip20', 'pass123');
 
--- 7. Membership (สำหรับลูกค้า 15 คนแรก)
-INSERT INTO membership (membership_name, membership_description, membership_point, customer_cust_ID) VALUES
+-- 7. Membership 
+INSERT INTO membership (membership_name, membership_description, membership_point, cust_ID) VALUES
 ('Platinum', 'สมาชิกระดับสูงสุด', 2500, 1),
 ('Gold', 'สมาชิกระดับทอง', 1800, 2),
 ('Silver', 'สมาชิกระดับเงิน', 1200, 3),
@@ -125,8 +119,8 @@ INSERT INTO membership (membership_name, membership_description, membership_poin
 ('Gold', 'สมาชิกระดับทอง', 1700, 14),
 ('Silver', 'สมาชิกระดับเงิน', 850, 15);
 
--- 8. รถ (25 คัน)
-INSERT INTO vehicle (vehicle_plate, vehicle_color, customer_cust_ID, vehicle_type_vtype_ID) VALUES
+-- 8. รถ 
+INSERT INTO vehicle (vehicle_plate, vehicle_color, cust_ID, vehicletype_ID) VALUES
 ('กก-1234', 'ดำ', 1, 4), ('ขข-5678', 'ขาว', 1, 2),
 ('คค-1111', 'เทา', 2, 2), ('งง-2222', 'แดง', 2, 3),
 ('จจ-3333', 'น้ำเงิน', 3, 5), ('ฉฉ-4444', 'เงิน', 3, 2),
@@ -141,8 +135,8 @@ INSERT INTO vehicle (vehicle_plate, vehicle_color, customer_cust_ID, vehicle_typ
 ('บบ-1013', 'เขียว', 18, 4), ('ปป-1014', 'เหลือง', 19, 1),
 ('ผผ-1015', 'ดำ', 20, 2);
 
--- 9. Booking เดือนที่ 1 (มกราคม 2024 - 20 bookings)
-INSERT INTO booking (booking_date, booking_status, customer_cust_ID, branch_ID) VALUES
+-- 9. Booking 
+INSERT INTO booking (booking_date, booking_status, cust_ID, branch_ID) VALUES
 ('2024-01-05 09:00:00', 'completed', 1, 1),
 ('2024-01-05 10:30:00', 'completed', 2, 1),
 ('2024-01-06 14:00:00', 'completed', 3, 1),
@@ -164,7 +158,7 @@ INSERT INTO booking (booking_date, booking_status, customer_cust_ID, branch_ID) 
 ('2024-01-31 09:30:00', 'completed', 4, 2),
 ('2024-01-31 16:00:00', 'completed', 5, 2);
 
--- Service สำหรับ booking 1-20
+-- Service 
 INSERT INTO service (service_status, service_startdate, service_finishdate, booking_ID, vehicle_ID) VALUES
 ('completed', '2024-01-05 09:10:00', '2024-01-05 09:40:00', 1, 1),
 ('completed', '2024-01-05 10:40:00', '2024-01-05 11:10:00', 2, 3),
@@ -187,60 +181,41 @@ INSERT INTO service (service_status, service_startdate, service_finishdate, book
 ('completed', '2024-01-31 09:40:00', '2024-01-31 10:25:00', 19, 8),
 ('completed', '2024-01-31 16:10:00', '2024-01-31 17:05:00', 20, 10);
 
--- Service Detail สำหรับ booking 1-20 (คำนวณ sdetail_price = base_price * multiplier)
-INSERT INTO service_detail (sdetail_quantity, sdetail_price, service_ID, service_type_ID, employee_ID) VALUES
--- Booking 1: SUV ล้างรถ (200*1.75=350)
+-- Service Detail 
+INSERT INTO service_detail (sdetail_quantity, sdetail_price, service_ID, serviceType_ID, emp_ID) VALUES
+-- Booking 1-20
 (1, 350.00, 1, 1, 3),
--- Booking 2: เก๋ง ล้างรถ (200*1.00=200)
 (1, 200.00, 2, 1, 3),
--- Booking 3: รถตู้ ล้างรถ+ดูดฝุ่น (200*2.00=400, 80*2.00=160)
 (1, 400.00, 3, 1, 3),
 (1, 160.00, 3, 2, 4),
--- Booking 4: กระบะ ล้างรถ (200*1.50=300)
 (1, 300.00, 4, 1, 7),
--- Booking 5: SUV ล้างรถ+เคลือบ (200*1.75=350, 150*1.75=262.50)
 (1, 350.00, 5, 1, 7),
 (1, 262.50, 5, 3, 7),
--- Booking 6: เก๋ง ล้างรถ (200*1.00=200)
 (1, 200.00, 6, 1, 10),
--- Booking 7: กระบะ ล้างรถ+ดูดฝุ่น (200*1.50=300, 80*1.50=120)
 (1, 300.00, 7, 1, 3),
 (1, 120.00, 7, 2, 4),
--- Booking 8: เก๋ง ล้างรถ (200*1.00=200)
 (1, 200.00, 8, 1, 3),
--- Booking 9: SUV ล้างรถ+เคลือบ (200*1.75=350, 150*1.75=262.50)
 (1, 350.00, 9, 1, 7),
 (1, 262.50, 9, 3, 7),
--- Booking 10: มอเตอร์ไซค์ ล้างรถ (200*0.50=100)
 (1, 100.00, 10, 1, 10),
--- Booking 11: เก๋ง ขัดสี+เคลือบ (1000*1.00=1000, 150*1.00=150)
 (1, 1000.00, 11, 4, 3),
 (1, 150.00, 11, 3, 4),
--- Booking 12: เก๋ง ล้างรถ (200*1.00=200)
 (1, 200.00, 12, 1, 3),
--- Booking 13: รถตู้ ล้างรถ (200*2.00=400)
 (1, 400.00, 13, 1, 3),
--- Booking 14: เก๋ง ล้างรถ (200*1.00=200)
 (1, 200.00, 14, 1, 3),
--- Booking 15: กระบะ ล้างรถ+ดูดฝุ่น (200*1.50=300, 80*1.50=120)
 (1, 300.00, 15, 1, 7),
 (1, 120.00, 15, 2, 7),
--- Booking 16: SUV ล้างรถ+เคลือบ (200*1.75=350, 150*1.75=262.50)
 (1, 350.00, 16, 1, 10),
 (1, 262.50, 16, 3, 10),
--- Booking 17: เก๋ง ล้างรถ (200*1.00=200)
 (1, 200.00, 17, 1, 3),
--- Booking 18: เก๋ง ซักเบาะ+ล้างรถ (2000*1.00=2000, 200*1.00=200)
 (1, 2000.00, 18, 5, 3),
 (1, 200.00, 18, 1, 4),
--- Booking 19: มอเตอร์ไซค์ ล้างรถ+ดูดฝุ่น (200*0.50=100, 80*0.50=40)
 (1, 100.00, 19, 1, 7),
 (1, 40.00, 19, 2, 7),
--- Booking 20: เก๋ง ล้างรถ+เคลือบ (200*1.00=200, 150*1.00=150)
 (1, 200.00, 20, 1, 7),
 (1, 150.00, 20, 3, 7);
 
--- Payment สำหรับ booking 1-20
+-- Payment
 INSERT INTO payment (payment_amount, payment_date, payment_method, booking_ID) VALUES
 (350.00, '2024-01-05 09:45:00', 'เงินสด', 1),
 (200.00, '2024-01-05 11:15:00', 'โอนเงิน', 2),
@@ -263,8 +238,8 @@ INSERT INTO payment (payment_amount, payment_date, payment_method, booking_ID) V
 (140.00, '2024-01-31 10:30:00', 'เงินสด', 19),
 (350.00, '2024-01-31 17:10:00', 'โอนเงิน', 20);
 
--- 10. Booking เดือนที่ 2 (กุมภาพันธ์ 2024 - 15 bookings)
-INSERT INTO booking (booking_date, booking_status, customer_cust_ID, branch_ID) VALUES
+-- 10. Booking
+INSERT INTO booking (booking_date, booking_status, cust_ID, branch_ID) VALUES
 ('2024-02-02 09:00:00', 'completed', 1, 1),
 ('2024-02-05 10:00:00', 'completed', 2, 1),
 ('2024-02-08 14:00:00', 'completed', 3, 1),
@@ -298,7 +273,7 @@ INSERT INTO service (service_status, service_startdate, service_finishdate, book
 ('completed', '2024-02-27 15:10:00', '2024-02-27 16:05:00', 34, 14),
 ('completed', '2024-02-28 11:40:00', '2024-02-28 12:00:00', 35, 15);
 
-INSERT INTO service_detail (sdetail_quantity, sdetail_price, service_ID, service_type_ID, employee_ID) VALUES
+INSERT INTO service_detail (sdetail_quantity, sdetail_price, service_ID, serviceType_ID, emp_ID) VALUES
 (1, 350.00, 21, 1, 3),
 (1, 200.00, 22, 1, 3),
 (1, 400.00, 23, 1, 3),
@@ -338,8 +313,8 @@ INSERT INTO payment (payment_amount, payment_date, payment_method, booking_ID) V
 (612.50, '2024-02-27 16:10:00', 'บัตรเครดิต', 34),
 (100.00, '2024-02-28 12:05:00', 'เงินสด', 35);
 
--- 11. Booking เดือนที่ 3 (มีนาคม 2024 - 15 bookings)
-INSERT INTO booking (booking_date, booking_status, customer_cust_ID, branch_ID) VALUES
+-- 11. Booking เดือนที่ 3
+INSERT INTO booking (booking_date, booking_status, cust_ID, branch_ID) VALUES
 ('2024-03-03 09:00:00', 'completed', 1, 1),
 ('2024-03-05 11:00:00', 'completed', 11, 1),
 ('2024-03-07 14:00:00', 'completed', 12, 1),
@@ -373,10 +348,10 @@ INSERT INTO service (service_status, service_startdate, service_finishdate, book
 ('in_progress', '2024-03-28 15:10:00', NULL, 49, 12),
 ('in_progress', '2024-03-29 11:40:00', NULL, 50, 13);
 
-INSERT INTO service_detail (sdetail_quantity, sdetail_price, service_ID, service_type_ID, employee_ID) VALUES
-(1, 1750.00, 36, 4, 3), -- SUV ขัดสี (1000*1.75)
+INSERT INTO service_detail (sdetail_quantity, sdetail_price, service_ID, serviceType_ID, emp_ID) VALUES
+(1, 1750.00, 36, 4, 3),
 (1, 350.00, 36, 1, 4),
-(1, 2000.00, 37, 5, 3), -- รถตู้ ซักเบาะ (2000*1.00)
+(1, 2000.00, 37, 5, 3),
 (1, 200.00, 38, 1, 3),
 (1, 300.00, 39, 1, 7),
 (1, 120.00, 39, 2, 7),
@@ -384,7 +359,7 @@ INSERT INTO service_detail (sdetail_quantity, sdetail_price, service_ID, service
 (1, 262.50, 40, 3, 10),
 (1, 200.00, 41, 1, 3),
 (1, 200.00, 42, 1, 3),
-(1, 2000.00, 43, 5, 3), -- รถตู้ ซักเบาะ
+(1, 2000.00, 43, 5, 3),
 (1, 400.00, 43, 1, 4),
 (1, 300.00, 44, 1, 7),
 (1, 350.00, 45, 1, 7),
@@ -409,9 +384,8 @@ INSERT INTO payment (payment_amount, payment_date, payment_method, booking_ID) V
 (200.00, '2024-03-23 09:45:00', 'เงินสด', 46),
 (200.00, '2024-03-25 14:15:00', 'โอนเงิน', 47),
 (200.00, '2024-03-27 10:45:00', 'เงินสด', 48);
--- ไม่มี payment สำหรับ booking 49, 50 เพราะยังไม่เสร็จ
 
--- 12. Receipt (สำหรับ payment บางรายการ)
+-- 12. Receipt
 INSERT INTO receipt (receipt_number, receipt_date, receipt_description, payment_ID) VALUES
 ('REC-2024-001', '2024-01-05 09:45:00', 'ค่าบริการล้างรถ SUV', 1),
 ('REC-2024-002', '2024-01-05 11:15:00', 'ค่าบริการล้างรถเก๋ง', 2),
@@ -422,5 +396,3 @@ INSERT INTO receipt (receipt_number, receipt_date, receipt_description, payment_
 ('REC-2024-007', '2024-03-03 10:55:00', 'ค่าบริการขัดสีและล้างรถ SUV', 36),
 ('REC-2024-008', '2024-03-05 12:15:00', 'ค่าบริการซักเบาะรถตู้', 37),
 ('REC-2024-009', '2024-03-17 12:45:00', 'ค่าบริการซักเบาะและล้างรถตู้', 43);
-
-
